@@ -1,0 +1,474 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin – Tierchiropraktik</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-karte {
+      background: var(--weiss);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--schatten);
+      text-align: center;
+    }
+    .stat-zahl {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--flieder-dunkel);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--text-hell);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* wochen */
+    .wochen-grid {
+      display: grid;
+      grid-template-columns: 70px repeat(7, 1fr);
+      border-left: 1px solid var(--grau-border);
+      border-top: 1px solid var(--grau-border);
+    }
+    .wochen-kopf {
+      background: var(--dunkel);
+      color: var(--flieder-hell);
+      padding: 10px 6px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .wochen-kopf.heute-kopf {
+      background: var(--flieder-dunkel);
+    }
+    .zeit-label {
+      background: var(--grau);
+      padding: 8px 6px;
+      text-align: right;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-hell);
+      border-right: 1px solid var(--grau-border);
+      border-bottom: 1px solid var(--grau-border);
+      line-height: 1.2;
+    }
+    .wochen-zelle {
+      border-right: 1px solid var(--grau-border);
+      border-bottom: 1px solid var(--grau-border);
+      min-height: 52px;
+      padding: 3px;
+      cursor: pointer;
+      transition: background var(--transition);
+      position: relative;
+    }
+    .wochen-zelle:hover {
+      background: var(--rosa-hell);
+    }
+    .wochen-zelle.heute-spalte {
+      background: rgba(232, 172, 250, 0.08);
+    }
+    .wochen-termin {
+      background: var(--flieder);
+      border-radius: 4px;
+      padding: 3px 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--dunkel);
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+      transition: background var(--transition);
+    }
+    .wochen-termin:hover {
+      background: var(--flieder-dunkel);
+      color: var(--weiss);
+    }
+
+    /*  Tages  */
+    .tages-grid {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      border-left: 1px solid var(--grau-border);
+      border-top: 1px solid var(--grau-border);
+    }
+    .tages-zelle {
+      border-right: 1px solid var(--grau-border);
+      border-bottom: 1px solid var(--grau-border);
+      min-height: 64px;
+      padding: 6px;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .tages-zelle:hover {
+      background: var(--rosa-hell);
+    }
+
+    /* admin */
+    .termin-formular-panel {
+      background: var(--weiss);
+      border-radius: var(--radius);
+      box-shadow: var(--schatten);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .termin-formular-panel h3 {
+      margin-bottom: 16px;
+      color: var(--flieder-dunkel);
+    }
+
+    .btn-klein {
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all var(--transition);
+    }
+    .btn-best  { background: #D4EDDA; color: #155724; }
+    .btn-best:hover  { background: #155724; color: #fff; }
+    .btn-abges { background: #F8D7DA; color: #721C24; }
+    .btn-abges:hover { background: #721C24; color: #fff; }
+    .btn-del   { background: var(--grau); color: var(--text-hell); }
+    .btn-del:hover   { background: #e74c3c; color: #fff; }
+
+    
+    .admin-suche {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .admin-suche input, .admin-suche select {
+      padding: 9px 14px;
+      border: 2px solid var(--grau-border);
+      border-radius: var(--radius-klein);
+      font-size: 0.9rem;
+      background: var(--weiss);
+      transition: border-color var(--transition);
+    }
+    .admin-suche input:focus, .admin-suche select:focus {
+      outline: none;
+      border-color: var(--flieder-dunkel);
+    }
+    .admin-suche input { flex: 1; min-width: 200px; }
+
+    /* Tabellle */
+    .tabelle-wrapper {
+      overflow-x: auto;
+    }
+
+    @media (max-width: 900px) {
+      .wochen-grid {
+        grid-template-columns: 50px repeat(7, 1fr);
+      }
+      .wochen-kopf, .zeit-label {
+        font-size: 0.68rem;
+        padding: 6px 3px;
+      }
+      .wochen-termin {
+        font-size: 0.65rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+  <div class="admin-login" id="login-bereich" role="main">
+    <div class="login-karte">
+      <div style="font-size:3rem;margin-bottom:12px">🔐</div>
+      <h1>Admin-Bereich</h1>
+      <p>Tierchiropraktik – Terminverwaltung</p>
+
+      <div id="login-fehler" style="
+        display:none;
+        background:#F8D7DA;
+        color:#721C24;
+        padding:10px 14px;
+        border-radius:var(--radius-klein);
+        margin-bottom:16px;
+        font-size:0.9rem;
+      " role="alert">
+         Falsches Passwort. Bitte erneut versuchen.
+      </div>
+
+      <div class="formular-gruppe">
+        <label for="admin-passwort">Passwort</label>
+        <input
+          type="password"
+          id="admin-passwort"
+          placeholder="Admin-Passwort eingeben"
+          autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') adminLogin()"
+        />
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="adminLogin()">
+         Anmelden
+      </button>
+
+      <p style="margin-top:20px;font-size:0.8rem;color:var(--text-hell)">
+         Standard-Passwort: <code>admin123</code><br>
+        <strong>Bitte vor Veröffentlichung in main.js ändern!</strong>
+      </p>
+
+      <div style="margin-top:16px;border-top:1px solid var(--grau-border);padding-top:16px">
+        <a href="index.html" style="font-size:0.9rem;color:var(--text-hell)">← Zurück zur Website</a>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="admin-bereich" id="admin-bereich">
+
+    <!-- Admin -->
+    <div class="admin-header">
+      <h1>🐴 Admin – Tierchiropraktik</h1>
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="font-size:0.9rem;opacity:0.7">Eingeloggt als Admin</span>
+        <button
+          class="btn"
+          style="background:rgba(255,255,255,0.15);color:#fff;padding:8px 16px;font-size:0.85rem"
+          onclick="adminLogout()"
+        >
+          🚪 Abmelden
+        </button>
+      </div>
+    </div>
+
+    
+    <div class="admin-nav-tabs" role="tablist">
+      <button class="admin-tab aktiv" onclick="adminTab('kalender')" id="tab-kalender" role="tab" aria-selected="true" aria-controls="panel-kalender">
+        📅 Kalender
+      </button>
+      <button class="admin-tab" onclick="adminTab('termine')" id="tab-termine" role="tab" aria-selected="false" aria-controls="panel-termine">
+        📋 Alle Termine
+      </button>
+      <button class="admin-tab" onclick="adminTab('neu')" id="tab-neu" role="tab" aria-selected="false" aria-controls="panel-neu">
+        ➕ Neuer Termin
+      </button>
+    </div>
+
+    <div class="admin-inhalt">
+
+      <div id="panel-kalender" role="tabpanel" aria-labelledby="tab-kalender">
+
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-karte">
+            <div class="stat-zahl" id="stat-heute">0</div>
+            <div class="stat-label">Heute</div>
+          </div>
+          <div class="stat-karte">
+            <div class="stat-zahl" id="stat-woche">0</div>
+            <div class="stat-label">Diese Woche</div>
+          </div>
+          <div class="stat-karte">
+            <div class="stat-zahl" id="stat-monat">0</div>
+            <div class="stat-label">Diesen Monat</div>
+          </div>
+          <div class="stat-karte">
+            <div class="stat-zahl" id="stat-offen">0</div>
+            <div class="stat-label">Unbestätigt</div>
+          </div>
+          <div class="stat-karte">
+            <div class="stat-zahl" id="stat-gesamt">0</div>
+            <div class="stat-label">Gesamt</div>
+          </div>
+        </div>
+
+        <div class="kalender-kopf">
+          <div class="kalender-nav">
+            <button onclick="kalenderNavigieren(-1)" aria-label="Zurück">◀</button>
+            <span class="kalender-titel" id="kalender-titel">–</span>
+            <button onclick="kalenderNavigieren(1)" aria-label="Vor">▶</button>
+            <button
+              onclick="kalenderHeute()"
+              style="padding:8px 14px;border:2px solid var(--grau-border);background:var(--weiss);border-radius:var(--radius-klein);cursor:pointer;font-size:0.85rem;font-weight:600"
+            >Heute</button>
+          </div>
+          <div class="kalender-ansicht-buttons" role="group" aria-label="Kalenderansicht">
+            <button class="ansicht-btn" id="btn-tag"   onclick="kalenderAnsicht('tag')"   >Tag</button>
+            <button class="ansicht-btn aktiv" id="btn-woche" onclick="kalenderAnsicht('woche')" >Woche</button>
+            <button class="ansicht-btn" id="btn-monat" onclick="kalenderAnsicht('monat')" >Monat</button>
+          </div>
+        </div>
+
+        <div id="kalender-container" style="background:var(--weiss);border-radius:var(--radius);box-shadow:var(--schatten);overflow:hidden">
+        </div>
+      </div>
+
+      <div id="panel-termine" role="tabpanel" aria-labelledby="tab-termine" style="display:none">
+        <h2 style="margin-bottom:16px">📋 Alle Termine</h2>
+
+        <div class="admin-suche">
+          <input type="text" id="suche-input" placeholder="🔍 Suchen (Name, Tier, Ort ...)" oninput="termineFiltern()" />
+          <select id="suche-status" onchange="termineFiltern()">
+            <option value="">Alle Status</option>
+            <option value="neu">Neu / Unbestätigt</option>
+            <option value="bestaetigt">Bestätigt</option>
+            <option value="abgesagt">Abgesagt</option>
+          </select>
+          <select id="suche-tierart" onchange="termineFiltern()">
+            <option value="">Alle</option>
+            <option value="Pferd">Pferd</option>
+            <option value="Sonstiges">Sonstiges</option>
+          </select>
+        </div>
+
+        <div class="tabelle-wrapper">
+          <table class="termin-tabelle" id="termine-tabelle">
+            <thead>
+              <tr>
+                <th>Datum &amp; Zeit</th>
+                <th>Tier</th>
+                <th>Tierart</th>
+                <th>Besitzer</th>
+                <th>Problem</th>
+                <th>Ort</th>
+                <th>Status</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody id="termine-tbody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="panel-neu" role="tabpanel" aria-labelledby="tab-neu" style="display:none">
+        <h2 style="margin-bottom:20px"> Termin manuell eintragen</h2>
+
+        <div class="termin-formular-panel">
+          <h3> Tier &amp; Problem</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="formular-gruppe">
+              <label for="neu-tierart">Tierart <span class="pflicht">*</span></label>
+              <select id="neu-tierart">
+                <option value="Pferd" selected>Pferd</option>
+                <option value="Sonstiges">Sonstiges (bitte anfragen)</option>
+              </select>
+            </div>
+            <div class="formular-gruppe">
+              <label for="neu-tiername">Tiername <span class="pflicht">*</span></label>
+              <input type="text" id="neu-tiername" placeholder="Name des Tieres" />
+            </div>
+            <div class="formular-gruppe">
+              <label for="neu-rasse">Rasse / Typ</label>
+              <input type="text" id="neu-rasse" placeholder="z. B. Labrador" />
+            </div>
+            <div class="formular-gruppe">
+              <label for="neu-groesse">Größe / Gewicht</label>
+              <input type="text" id="neu-groesse" placeholder="z. B. 500 kg" />
+            </div>
+          </div>
+          <div class="formular-gruppe">
+            <label for="neu-problem">Beschwerden / Problem <span class="pflicht">*</span></label>
+            <textarea id="neu-problem" rows="2" placeholder="Beschreibung der Beschwerden ..."></textarea>
+          </div>
+        </div>
+
+        <div class="termin-formular-panel">
+          <h3> Datum &amp; Ort</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="formular-gruppe">
+              <label for="neu-datum">Datum <span class="pflicht">*</span></label>
+              <input type="date" id="neu-datum" />
+            </div>
+            <div class="formular-gruppe">
+              <label for="neu-uhrzeit">Uhrzeit <span class="pflicht">*</span></label>
+              <input type="time" id="neu-uhrzeit" value="09:00" />
+            </div>
+          </div>
+          <div class="formular-gruppe">
+            <label for="neu-adresse">Adresse (Behandlungsort) <span class="pflicht">*</span></label>
+            <input type="text" id="neu-adresse" placeholder="Straße, PLZ Ort" />
+          </div>
+          <div class="formular-gruppe">
+            <label for="neu-hinweis">Anfahrtshinweis</label>
+            <input type="text" id="neu-hinweis" placeholder="Hinweise zur Anfahrt ..." />
+          </div>
+        </div>
+
+        <div class="termin-formular-panel">
+          <h3> Kontakt</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="formular-gruppe">
+              <label for="neu-vorname">Vorname <span class="pflicht">*</span></label>
+              <input type="text" id="neu-vorname" placeholder="Vorname" />
+            </div>
+            <div class="formular-gruppe">
+              <label for="neu-nachname">Nachname <span class="pflicht">*</span></label>
+              <input type="text" id="neu-nachname" placeholder="Nachname" />
+            </div>
+            <div class="formular-gruppe">
+              <label for="neu-email">E-Mail</label>
+              <input type="email" id="neu-email" placeholder="email@beispiel.de" />
+            </div>
+            <div class="formular-gruppe">
+              <label for="neu-telefon">Telefon</label>
+              <input type="tel" id="neu-telefon" placeholder="0176 ..." />
+            </div>
+          </div>
+          <div class="formular-gruppe">
+            <label for="neu-status">Status</label>
+            <select id="neu-status">
+              <option value="bestaetigt"> Bestätigt</option>
+              <option value="neu"> Neu / Unbestätigt</option>
+              <option value="abgesagt"> Abgesagt</option>
+            </select>
+          </div>
+          <div class="formular-gruppe">
+            <label for="neu-notiz">Interne Notiz</label>
+            <textarea id="neu-notiz" rows="2" placeholder="Nur für Sie sichtbare Notizen ..."></textarea>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;justify-content:flex-end">
+          <button class="btn btn-secondary" onclick="neuFormularLeeren()">🗑 Leeren</button>
+          <button class="btn btn-primary" onclick="neuTerminSpeichern()">💾 Termin speichern</button>
+        </div>
+
+        <div id="neu-erfolg" style="display:none;margin-top:16px;background:#D4EDDA;color:#155724;padding:12px 16px;border-radius:var(--radius-klein);">
+          ✅ Termin erfolgreich gespeichert!
+        </div>
+      </div>
+
+    </div><!-- /admin -->
+  </div><!-- /admin -->
+
+  
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-titel" onclick="modalSchliessen(event)">
+    <div class="modal">
+      <button class="modal-schliessen" onclick="modalZu()" aria-label="Modal schließen">✕</button>
+      <h2 id="modal-titel" style="margin-bottom:20px;color:var(--flieder-dunkel)">📋 Termin Details</h2>
+
+      <div id="modal-inhalt">
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:24px;flex-wrap:wrap" id="modal-aktionen">
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
+

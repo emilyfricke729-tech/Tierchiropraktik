@@ -1,0 +1,525 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Online Termin buchen bei Dennis Meyer – Ganzheitliche Pferdetherapie, Physiotherapie und Osteopathie. Einfach und schnell." />
+  <title>Termin buchen – Dennis Meyer Pferdetherapie</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+   
+    .zeitslot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .zeitslot {
+      padding: 10px 6px;
+      text-align: center;
+      border: 2px solid var(--grau-border);
+      border-radius: var(--radius-klein);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--weiss);
+      transition: all var(--transition);
+      user-select: none;
+    }
+    .zeitslot:hover:not(.belegt) {
+      border-color: var(--flieder-dunkel);
+      background: var(--flieder-hell);
+    }
+    .zeitslot.ausgewaehlt {
+      background: var(--flieder);
+      border-color: var(--flieder-dunkel);
+      color: var(--dunkel);
+    }
+    .zeitslot.belegt {
+      background: var(--grau);
+      color: var(--text-hell);
+      cursor: not-allowed;
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+    .datum-input-wrapper {
+      position: relative;
+    }
+    .formular-schritt {
+      display: none;
+    }
+    .formular-schritt.aktiv {
+      display: block;
+    }
+    .tier-auswahl-buchung {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .tier-option {
+      padding: 16px 10px;
+      text-align: center;
+      border: 2px solid var(--grau-border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all var(--transition);
+      background: var(--weiss);
+      font-size: 0.9rem;
+    }
+    .tier-option:hover {
+      border-color: var(--flieder-dunkel);
+      background: var(--flieder-hell);
+    }
+    .tier-option.ausgewaehlt {
+      border-color: var(--flieder-dunkel);
+      background: var(--flieder);
+    }
+    .tier-option .tier-emoji {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+      gap: 12px;
+    }
+    .nav-buttons .btn {
+      min-width: 140px;
+    }
+    .zusammenfassung-tabelle {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .zusammenfassung-tabelle td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--grau-border);
+      font-size: 0.95rem;
+    }
+    .zusammenfassung-tabelle td:first-child {
+      font-weight: 700;
+      color: var(--text-hell);
+      width: 45%;
+    }
+    .zusammenfassung-tabelle td:last-child {
+      color: var(--dunkel);
+    }
+    .datenschutz-box {
+      background: var(--flieder-hell);
+      border-radius: var(--radius-klein);
+      padding: 16px 18px;
+      font-size: 0.88rem;
+      color: var(--text);
+      margin-bottom: 20px;
+      border-left: 4px solid var(--flieder-dunkel);
+    }
+    .fehler-hinweis {
+      color: #cf594c;
+      font-size: 0.85rem;
+      margin-top: 4px;
+      display: none;
+    }
+    .fehler-hinweis.sichtbar {
+      display: block;
+    }
+    input.fehler, select.fehler, textarea.fehler {
+      border-color: #e74c3c !important;
+    }
+    .pflichtfeld-hinweis {
+      font-size: 0.82rem;
+      color: var(--text-hell);
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="notfall-banner" role="alert">
+     Bei einem Notfall oder dringenden Beschwerden bitte sofort einen <strong>Tierarzt</strong> aufsuchen!
+  </div>
+
+  <nav class="navbar" aria-label="Hauptnavigation">
+    <div class="navbar-inner">
+    
+      <div class="navbar-logo" id="logo-bereich" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="Navigation öffnen">
+        <div class="logo-svg-wrapper">
+          <img src="bilder/logo.svg" alt="Dennis Meyer Pferdetherapie Logo" />
+        </div>
+        <div class="logo-text-block">
+          <span class="logo-text-name">Dennis Meyer</span>
+          <span class="logo-text-sub">Ganzheitliche Pferdetherapie</span>
+        </div>
+        <div class="logo-dropdown" id="logo-dropdown" role="menu">
+          <a href="index.html" role="menuitem"> Start</a>
+          <a href="ueber-mich.html" role="menuitem"> Über mich</a>
+          <a href="kontakt.html" role="menuitem"> Kontakt</a>
+          <a href="impressum.html" role="menuitem"> Impressum</a>
+          <a href="termin.html" class="termin-link" role="menuitem"> Termin buchen</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div style="background:linear-gradient(135deg,var(--flieder-hell),var(--rosa));padding:40px 20px 30px;text-align:center;">
+    <h1 style="margin-bottom:0.5rem">Termin online buchen</h1>
+    <p style="color:var(--text-hell);max-width:550px;margin:0 auto">
+      Füllen Sie das Formular in wenigen Schritten aus. Sie erhalten eine Bestätigung per E-Mail oder Telefon.
+    </p>
+  </div>
+
+  <main class="seite-inhalt">
+    <div class="formular-bereich">
+
+      <div class="schritte-leiste" role="progressbar" aria-label="Buchungsfortschritt" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" id="schritte-leiste">
+        <div class="schritt aktiv" id="schritt-label-1">1 · Tier &amp; Problem</div>
+        <div class="schritt" id="schritt-label-2">2 · Datum &amp; Zeit</div>
+        <div class="schritt" id="schritt-label-3">3 · Ihre Daten</div>
+        <div class="schritt" id="schritt-label-4">4 · Bestätigung</div>
+      </div>
+
+      <p class="pflichtfeld-hinweis">Felder mit <span style="color:var(--flieder-dunkel)">*</span> sind Pflichtfelder.</p>
+
+      <div class="formular-schritt aktiv" id="schritt-1" aria-labelledby="schritt-label-1">
+        <h2 style="margin-bottom:1.5rem">🐾 Schritt 1: Ihr Tier &amp; das Problem</h2>
+
+        <div class="formular-gruppe">
+          <label>Tierart auswählen <span class="pflicht">*</span></label>
+          <div class="tier-auswahl-buchung" id="tierart-auswahl" role="group" aria-label="Tierart auswählen">
+            <div class="tier-option ausgewaehlt" data-wert="Pferd" role="radio" aria-checked="true" tabindex="0">
+              <span class="tier-emoji"></span>Pferd
+            </div>
+            <div class="tier-option" data-wert="Sonstiges" role="radio" aria-checked="false" tabindex="0">
+              <span class="tier-emoji"></span>Sonstiges<br><small style="font-weight:400;font-size:0.75rem">(bitte anfragen)</small>
+            </div>
+          </div>
+          <input type="hidden" id="tierart" name="tierart" value="Pferd" />
+          <p class="fehler-hinweis" id="fehler-tierart">Bitte wählen Sie eine Tierart aus.</p>
+        </div>
+
+        <div class="formular-grid-2">
+          <div class="formular-gruppe">
+            <label for="tiername">Name des Tieres <span class="pflicht">*</span></label>
+            <input type="text" id="tiername" name="tiername" placeholder="z. B. Luna" autocomplete="off" />
+            <p class="fehler-hinweis" id="fehler-tiername">Bitte geben Sie den Namen Ihres Tieres ein.</p>
+          </div>
+          <div class="formular-gruppe">
+            <label for="tier-rasse">Rasse / Typ</label>
+            <input type="text" id="tier-rasse" name="tier-rasse" placeholder="z. B. Labrador, Warmblut, ..." autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="formular-grid-2">
+          <div class="formular-gruppe">
+            <label for="tier-alter">Alter des Tieres</label>
+            <input type="text" id="tier-alter" name="tier-alter" placeholder="z. B. 5 Jahre" autocomplete="off" />
+          </div>
+          <div class="formular-gruppe">
+            <label for="tier-groesse">Größe / Gewicht (ungefähr)</label>
+            <input type="text" id="tier-groesse" name="tier-groesse" placeholder="z. B. 500 kg, 30 cm Schulterhöhe" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="formular-gruppe">
+          <label>Verhalten des Tieres <span class="pflicht">*</span> <span style="font-weight:400;font-size:0.85rem">(Mehrfachauswahl möglich)</span></label>
+          <div class="checkbox-gruppe" role="group" aria-label="Verhalten des Tieres">
+            <label class="checkbox-option">
+              <input type="checkbox" name="verhalten" value="freundlich" />  Freundlich
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" name="verhalten" value="scheu" />  Scheu / Ängstlich
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" name="verhalten" value="beisst" />  Beißt / Schnappt
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" name="verhalten" value="tritt" />  Tritt / Schlägt aus
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" name="verhalten" value="unberechenbar" />  Unberechenbar
+            </label>
+          </div>
+          <p class="fehler-hinweis" id="fehler-verhalten">Bitte geben Sie das Verhalten Ihres Tieres an.</p>
+        </div>
+
+        <div class="formular-gruppe">
+          <label for="problematik">Beschwerden / Problematik <span class="pflicht">*</span></label>
+          <textarea id="problematik" name="problematik" placeholder="Beschreiben Sie bitte die Beschwerden Ihres Tieres so genau wie möglich.&#10;z. B. Steifheit hinten rechts seit 2 Wochen, lahmt beim Traben ..." rows="4"></textarea>
+          <p class="fehler-hinweis" id="fehler-problematik">Bitte beschreiben Sie die Beschwerden.</p>
+        </div>
+
+        <div class="formular-gruppe">
+          <label for="seit-wann">Seit wann bestehen die Beschwerden?</label>
+          <input type="text" id="seit-wann" name="seit-wann" placeholder="z. B. seit 2 Wochen, seit dem Sturz letzte Woche ..." />
+        </div>
+
+        <div class="formular-gruppe">
+          <label>War das Tier bereits beim Tierarzt deswegen?</label>
+          <div class="radio-gruppe" role="group" aria-label="Tierarzt besucht">
+            <label class="radio-option">
+              <input type="radio" name="tierarzt" value="ja" /> Ja
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="tierarzt" value="nein" /> Nein
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="tierarzt" value="geplant" /> Noch geplant
+            </label>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <span></span>
+          <button class="btn btn-primary" onclick="naechsterSchritt(1)" type="button">
+            Weiter → Datum &amp; Zeit
+          </button>
+        </div>
+      </div>
+
+      <div class="formular-schritt" id="schritt-2" aria-labelledby="schritt-label-2">
+        <h2 style="margin-bottom:1.5rem"> Schritt 2: Wunschdatum &amp; Uhrzeit</h2>
+
+        <div class="formular-hinweis">
+           Die angezeigten Zeitslots sind Beispiele. Nach Ihrer Anfrage melde ich mich persönlich zur Terminbestätigung.
+        </div>
+
+        <div class="formular-gruppe">
+          <label for="wunschdatum">Wunschdatum <span class="pflicht">*</span></label>
+          <div class="datum-input-wrapper">
+            <input type="date" id="wunschdatum" name="wunschdatum" min="" />
+          </div>
+          <p class="fehler-hinweis" id="fehler-datum">Bitte wählen Sie ein Datum aus.</p>
+        </div>
+
+        <div class="formular-gruppe">
+          <label>Wunschzeit <span class="pflicht">*</span></label>
+          <div class="zeitslot-grid" id="zeitslot-grid" role="group" aria-label="Zeitslot auswählen">
+            <div class="zeitslot" data-zeit="08:00">08:00</div>
+            <div class="zeitslot" data-zeit="09:00">09:00</div>
+            <div class="zeitslot" data-zeit="10:00">10:00</div>
+            <div class="zeitslot" data-zeit="11:00">11:00</div>
+            <div class="zeitslot" data-zeit="12:00">12:00</div>
+            <div class="zeitslot belegt" data-zeit="13:00" aria-disabled="true">13:00 ✗</div>
+            <div class="zeitslot" data-zeit="14:00">14:00</div>
+            <div class="zeitslot" data-zeit="15:00">15:00</div>
+            <div class="zeitslot belegt" data-zeit="16:00" aria-disabled="true">16:00 ✗</div>
+            <div class="zeitslot" data-zeit="17:00">17:00</div>
+            <div class="zeitslot" data-zeit="18:00">18:00</div>
+          </div>
+          <input type="hidden" id="uhrzeit" name="uhrzeit" />
+          <p class="fehler-hinweis" id="fehler-uhrzeit">Bitte wählen Sie eine Uhrzeit aus.</p>
+        </div>
+
+        <div class="formular-gruppe">
+          <label for="alternativtermin">Alternativ-Termin (falls Wunschtermin nicht möglich)</label>
+          <input type="date" id="alternativtermin" name="alternativtermin" min="" />
+        </div>
+
+        <div class="formular-gruppe">
+          <label for="adresse-termin">Adresse des Termins <span class="pflicht">*</span> <span style="font-weight:400;font-size:0.85rem">(wohin soll ich kommen?)</span></label>
+          <input type="text" id="adresse-strasse" name="adresse-strasse" placeholder="Straße und Hausnummer" style="margin-bottom:10px" autocomplete="street-address" />
+          <div class="formular-grid-2">
+            <input type="text" id="adresse-plz" name="adresse-plz" placeholder="PLZ" maxlength="5" autocomplete="postal-code" />
+            <input type="text" id="adresse-ort" name="adresse-ort" placeholder="Ort" autocomplete="address-level2" />
+          </div>
+          <p class="fehler-hinweis" id="fehler-adresse">Bitte geben Sie die Adresse des Termins an.</p>
+        </div>
+
+        <div class="formular-gruppe">
+          <label for="anfahrt-hinweis">Hinweise zur Anfahrt / zum Stallort</label>
+          <textarea id="anfahrt-hinweis" name="anfahrt-hinweis" placeholder="z. B. Klingeln beim Eingang links, Hof hinten rechts, Parkplatz vor dem Tor ..." rows="2"></textarea>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn btn-secondary" onclick="vorherigerSchritt(2)" type="button">← Zurück</button>
+          <button class="btn btn-primary" onclick="naechsterSchritt(2)" type="button">Weiter → Ihre Daten</button>
+        </div>
+      </div>
+
+      <div class="formular-schritt" id="schritt-3" aria-labelledby="schritt-label-3">
+        <h2 style="margin-bottom:1.5rem"> Schritt 3: Ihre Kontaktdaten <small style="font-size:0.75rem;font-weight:400;color:var(--text-hell)">(Tierhalter / Besitzer)</small></h2>
+
+        <div class="formular-hinweis">
+           Ihre Daten werden ausschließlich zur Terminbestätigung verwendet und DSGVO-konform verarbeitet.
+          Mehr Infos in unserer <a href="impressum.html#datenschutz">Datenschutzerklärung</a>.
+        </div>
+
+        <div class="formular-grid-2">
+          <div class="formular-gruppe">
+            <label for="vorname">Vorname <span class="pflicht">*</span></label>
+            <input type="text" id="vorname" name="vorname" placeholder="Ihr Vorname" autocomplete="given-name" />
+            <p class="fehler-hinweis" id="fehler-vorname">Bitte geben Sie Ihren Vornamen ein.</p>
+          </div>
+          <div class="formular-gruppe">
+            <label for="nachname">Nachname <span class="pflicht">*</span></label>
+            <input type="text" id="nachname" name="nachname" placeholder="Ihr Nachname" autocomplete="family-name" />
+            <p class="fehler-hinweis" id="fehler-nachname">Bitte geben Sie Ihren Nachnamen ein.</p>
+          </div>
+        </div>
+
+        <div class="formular-gruppe">
+          <label>Bevorzugte Kontaktmethode für die Bestätigung <span class="pflicht">*</span></label>
+          <div class="radio-gruppe" id="kontakt-methode" role="group" aria-label="Kontaktmethode">
+            <label class="radio-option">
+              <input type="radio" name="kontakt-methode" value="email" id="methode-email" /> ✉️ E-Mail
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="kontakt-methode" value="telefon" id="methode-telefon" /> 📞 Telefon
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="kontakt-methode" value="beide" id="methode-beide" /> Beides
+            </label>
+          </div>
+          <p class="fehler-hinweis" id="fehler-kontakt-methode">Bitte wählen Sie eine Kontaktmethode.</p>
+        </div>
+
+        <div class="formular-gruppe" id="gruppe-email">
+          <label for="email">E-Mail-Adresse <span class="pflicht">*</span></label>
+          <input type="email" id="email" name="email" placeholder="ihre@email.de" autocomplete="email" />
+          <p class="fehler-hinweis" id="fehler-email">Bitte geben Sie eine gültige E-Mail-Adresse ein.</p>
+        </div>
+
+        <div class="formular-gruppe" id="gruppe-telefon">
+          <label for="telefon">Telefonnummer <span class="pflicht">*</span></label>
+          <input type="tel" id="telefon" name="telefon" placeholder="z. B. 0176 12345678" autocomplete="tel" />
+          <p class="fehler-hinweis" id="fehler-telefon">Bitte geben Sie Ihre Telefonnummer ein.</p>
+        </div>
+
+        <div class="formular-gruppe">
+          <label for="erreichbar">Wann sind Sie am besten erreichbar?</label>
+          <input type="text" id="erreichbar" name="erreichbar" placeholder="z. B. Werktags ab 17 Uhr, Samstag ganztags" />
+        </div>
+
+        <div class="formular-gruppe">
+          <label for="sonstiges">Sonstige Anmerkungen</label>
+          <textarea id="sonstiges" name="sonstiges" placeholder="Weitere Hinweise, Fragen oder Besonderheiten ..." rows="3"></textarea>
+        </div>
+
+        <div class="formular-gruppe">
+          <label class="checkbox-option" style="align-items:flex-start;gap:12px;background:var(--grau);padding:14px 16px;">
+            <input type="checkbox" id="dsgvo-zustimmung" name="dsgvo-zustimmung" style="margin-top:3px" />
+            <span style="font-size:0.9rem">
+              Ich habe die <a href="impressum.html#datenschutz" target="_blank">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zur Terminvereinbarung zu. <span style="color:var(--flieder-dunkel)">*</span>
+            </span>
+          </label>
+          <p class="fehler-hinweis" id="fehler-dsgvo">Bitte stimmen Sie der Datenschutzerklärung zu.</p>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn btn-secondary" onclick="vorherigerSchritt(3)" type="button">← Zurück</button>
+          <button class="btn btn-primary" onclick="naechsterSchritt(3)" type="button">Weiter → Zusammenfassung</button>
+        </div>
+      </div>
+
+      <div class="formular-schritt" id="schritt-4" aria-labelledby="schritt-label-4">
+        <h2 style="margin-bottom:1.5rem"> Schritt 4: Zusammenfassung &amp; Absenden</h2>
+
+        <div class="karte" style="margin-bottom:24px">
+          <h3 style="margin-bottom:14px;color:var(--flieder-dunkel)"> Tier &amp; Problem</h3>
+          <table class="zusammenfassung-tabelle">
+            <tr><td>Tierart</td><td id="zsf-tierart">–</td></tr>
+            <tr><td>Name des Tieres</td><td id="zsf-tiername">–</td></tr>
+            <tr><td>Rasse / Typ</td><td id="zsf-rasse">–</td></tr>
+            <tr><td>Alter / Größe</td><td id="zsf-alter">–</td></tr>
+            <tr><td>Verhalten</td><td id="zsf-verhalten">–</td></tr>
+            <tr><td>Beschwerden</td><td id="zsf-problematik">–</td></tr>
+          </table>
+        </div>
+
+        <div class="karte" style="margin-bottom:24px">
+          <h3 style="margin-bottom:14px;color:var(--flieder-dunkel)"> Termin &amp; Ort</h3>
+          <table class="zusammenfassung-tabelle">
+            <tr><td>Wunschdatum</td><td id="zsf-datum">–</td></tr>
+            <tr><td>Uhrzeit</td><td id="zsf-uhrzeit">–</td></tr>
+            <tr><td>Adresse</td><td id="zsf-adresse">–</td></tr>
+          </table>
+        </div>
+
+        <div class="karte" style="margin-bottom:24px">
+          <h3 style="margin-bottom:14px;color:var(--flieder-dunkel)"> Ihre Daten (Tierhalter)</h3>
+          <table class="zusammenfassung-tabelle">
+            <tr><td>Name</td><td id="zsf-name">–</td></tr>
+            <tr><td>E-Mail</td><td id="zsf-email">–</td></tr>
+            <tr><td>Telefon</td><td id="zsf-telefon">–</td></tr>
+          </table>
+        </div>
+
+        <div class="datenschutz-box">
+           Nach dem Absenden erhalten Sie eine Nachricht (E-Mail / Telefon) zur Bestätigung.
+          Erst nach Ihrer Bestätigung wird der Termin endgültig eingetragen. So vermeiden wir Doppelbuchungen.
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn btn-secondary" onclick="vorherigerSchritt(4)" type="button">← Zurück</button>
+          <button class="btn btn-primary btn-gross" onclick="terminAbsenden()" id="absenden-btn" type="button">
+             Termin anfragen
+          </button>
+        </div>
+      </div>
+
+      <div class="erfolgs-meldung" id="erfolgs-meldung" aria-live="assertive" role="status">
+        <div class="erfolgs-icon"></div>
+        <h2 style="margin-bottom:1rem">Anfrage erhalten!</h2>
+        <p style="font-size:1.1rem;color:var(--text-hell);max-width:500px;margin:0 auto 1.5rem;">
+          Vielen Dank! Dennis Meyer meldet sich persönlich bei Ihnen –
+          bitte halten Sie Ihr Telefon bzw. Ihre E-Mail bereit.
+        </p>
+        <div class="karte" style="max-width:450px;margin:0 auto 2rem;text-align:left">
+          <p><strong>Was passiert jetzt?</strong></p>
+          <ol style="padding-left:20px;color:var(--text-hell);font-size:0.95rem;line-height:2">
+            <li>Dennis Meyer prüft Ihre Anfrage</li>
+            <li>Er meldet sich direkt bei Ihnen per Telefon oder E-Mail</li>
+            <li>Gemeinsam wird der Termin bestätigt</li>
+            <li>Er kommt zur vereinbarten Zeit direkt zu Ihrem Pferd</li>
+          </ol>
+        </div>
+        <a href="index.html" class="btn btn-primary btn-gross">🏠 Zurück zur Startseite</a>
+      </div>
+
+    </div>
+  </main>
+
+  
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-spalte">
+          <h4> Dennis Meyer</h4>
+          <p>Dennis Meyer</p>
+          <p>Ganzheitliche Pferdetherapie – Physiotherapie und Osteopathie.</p>
+        </div>
+        <div class="footer-spalte">
+          <h4>Navigation</h4>
+          <a href="index.html">Startseite</a>
+          <a href="ueber-mich.html">Über mich</a>
+          <a href="termin.html">Termin buchen</a>
+          <a href="kontakt.html">Kontakt</a>
+        </div>
+        <div class="footer-spalte">
+          <h4>Rechtliches</h4>
+          <a href="impressum.html">Impressum</a>
+          <a href="impressum.html#datenschutz">Datenschutzerklärung</a>
+        </div>
+        <div class="footer-spalte">
+          <h4>Kontakt</h4>
+          <p> [IHRE TELEFONNUMMER]</p>
+          <p> [IHRE E-MAIL]</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p> Chiropraktik ersetzt keine tierärztliche Behandlung. Bei Notfällen sofort zum Tierarzt.</p>
+        <p style="margin-top:10px">© 2026 Tierchiropraktik Dennis Meyer · <a href="impressum.html" style="color:var(--flieder)">Impressum</a> · <a href="impressum.html#datenschutz" style="color:var(--flieder)">Datenschutz</a></p>
+        <p style="margin-top:8px;font-size:0.72rem;opacity:0.35"><a href="admin.html" style="color:inherit">⚙</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
+
+
+

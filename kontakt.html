@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Kontakt zur Tierchiropraktik Dennis Meyer – Telefon, E-Mail und Kontaktformular." />
+  <title>Kontakt – Tierchiropraktik Dennis Meyer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="notfall-banner" role="alert">
+     Bei einem Notfall oder dringenden Beschwerden bitte sofort einen <strong>Tierarzt</strong> aufsuchen!
+  </div>
+
+  <nav class="navbar" aria-label="Hauptnavigation">
+    <div class="navbar-inner">
+
+      <div class="navbar-logo" id="logo-bereich" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="Navigation öffnen">
+        <div class="logo-svg-wrapper">
+          <img src="bilder/logo.svg" alt="Dennis Meyer Pferdetherapie Logo" />
+        </div>
+        <div class="logo-text-block">
+          <span class="logo-text-name">Dennis Meyer</span>
+          <span class="logo-text-sub">Ganzheitliche Pferdetherapie</span>
+        </div>
+        <div class="logo-dropdown" id="logo-dropdown" role="menu">
+          <a href="index.html" role="menuitem"> Start</a>
+          <a href="ueber-mich.html" role="menuitem"> Über mich</a>
+          <a href="kontakt.html" role="menuitem"> Kontakt</a>
+          <a href="impressum.html" role="menuitem"> Impressum</a>
+          <a href="termin.html" class="termin-link" role="menuitem"> Termin buchen</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div style="background:linear-gradient(135deg,var(--flieder-hell),var(--rosa));padding:40px 20px 30px;text-align:center;">
+    <h1 style="margin-bottom:0.5rem"> Kontakt</h1>
+    <p style="color:var(--text-hell)">Ich freue mich über Ihre Nachricht</p>
+  </div>
+
+  <main class="seite-inhalt">
+    <div class="kontakt-grid">
+
+      <div>
+        <div class="kontakt-info-karte">
+          <h2 style="margin-bottom:20px">Kontaktdaten</h2>
+
+          <div class="kontakt-zeile">
+            <div class="kontakt-icon"></div>
+            <div>
+              <div class="kontakt-label">Telefon</div>
+              <div class="kontakt-wert">
+                <a href="tel:[TELEFONNUMMER]">[IHRE TELEFONNUMMER]</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="kontakt-zeile">
+            <div class="kontakt-icon"></div>
+            <div>
+              <div class="kontakt-label">E-Mail</div>
+              <div class="kontakt-wert">
+                <a href="mailto:[IHRE-EMAIL@DOMAIN.DE]">[IHRE E-MAIL-ADRESSE]</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="kontakt-zeile">
+            <div class="kontakt-icon"></div>
+            <div>
+              <div class="kontakt-label">Einzugsgebiet</div>
+              <div class="kontakt-wert">[IHR EINZUGSGEBIET]</div>
+            </div>
+          </div>
+
+          <div class="kontakt-zeile">
+            <div class="kontakt-icon"></div>
+            <div>
+              <div class="kontakt-label">Erreichbarkeit</div>
+              <div class="kontakt-wert">
+                [IHRE ERREICHBARKEITSZEITEN]<br>
+                <small style="color:var(--text-hell)">z. B. Mo–Fr 8–18 Uhr, Sa 9–14 Uhr</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="kontakt-zeile">
+            <div class="kontakt-icon"></div>
+            <div>
+              <div class="kontakt-label">Hausbesuche</div>
+              <div class="kontakt-wert">
+                Ich habe keine eigene Praxis –<br>ich komme direkt zu Ihnen!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:linear-gradient(135deg,#FF6B9D22,#FF475722);border:2px solid #FF6B9D;border-radius:var(--radius);padding:20px;margin-top:20px">
+          <h3 style="color:#c0392b;margin-bottom:8px"> Notfall?</h3>
+          <p style="font-size:0.92rem;margin:0;color:var(--text)">
+            Bei einem <strong>Notfall</strong> oder akuten, starken Beschwerden wenden Sie sich bitte
+            sofort an einen Tierarzt oder eine tierärztliche Notaufnahme.
+            Chiropraktik ist keine Notfallmedizin!
+          </p>
+        </div>
+
+        <div style="margin-top:20px">
+          <a href="termin.html" class="btn btn-primary" style="width:100%;display:block;text-align:center">
+             Direkt Termin buchen
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div class="karte">
+          <h2 style="margin-bottom:1.5rem">Nachricht senden</h2>
+
+          <div id="kontakt-formular">
+            <div class="formular-gruppe">
+              <label for="k-name">Ihr Name <span class="pflicht">*</span></label>
+              <input type="text" id="k-name" placeholder="Vor- und Nachname" autocomplete="name" />
+            </div>
+
+            <div class="formular-gruppe">
+              <label for="k-email">E-Mail <span class="pflicht">*</span></label>
+              <input type="email" id="k-email" placeholder="ihre@email.de" autocomplete="email" />
+            </div>
+
+            <div class="formular-gruppe">
+              <label for="k-telefon">Telefon</label>
+              <input type="tel" id="k-telefon" placeholder="Optional – für Rückruf" autocomplete="tel" />
+            </div>
+
+            <div class="formular-gruppe">
+              <label for="k-betreff">Betreff <span class="pflicht">*</span></label>
+              <select id="k-betreff">
+                <option value="">– Bitte auswählen –</option>
+                <option value="anfrage">Allgemeine Anfrage</option>
+                <option value="termin">Frage zur Terminbuchung</option>
+                <option value="preise">Frage zu Preisen / Kosten</option>
+                <option value="einzugsgebiet">Einzugsgebiet-Anfrage</option>
+                <option value="sonstiges">Sonstiges</option>
+              </select>
+            </div>
+
+            <div class="formular-gruppe">
+              <label for="k-nachricht">Ihre Nachricht <span class="pflicht">*</span></label>
+              <textarea id="k-nachricht" rows="5" placeholder="Schreiben Sie mir – ich antworte so schnell wie möglich."></textarea>
+            </div>
+
+            <div class="formular-gruppe">
+              <label class="checkbox-option" style="align-items:flex-start;gap:12px;background:var(--grau);padding:14px 16px;">
+                <input type="checkbox" id="k-dsgvo" style="margin-top:3px" />
+                <span style="font-size:0.88rem">
+                  Ich stimme der Verarbeitung meiner Daten zur Beantwortung meiner Anfrage gemäß der
+                  <a href="impressum.html#datenschutz" target="_blank">Datenschutzerklärung</a> zu. <span style="color:var(--flieder-dunkel)">*</span>
+                </span>
+              </label>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%" onclick="kontaktAbsenden()" type="button">
+               Nachricht senden
+            </button>
+          </div>
+
+          <div id="kontakt-erfolg" style="display:none;text-align:center;padding:30px 0">
+            <div style="font-size:3rem;margin-bottom:12px"></div>
+            <h3>Nachricht gesendet!</h3>
+            <p style="color:var(--text-hell)">Vielen Dank! Ich melde mich so schnell wie möglich bei Ihnen.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-spalte">
+          <h4> Dennis Meyer</h4>
+          <p>Dennis Meyer</p>
+          <p>Ganzheitliche Pferdetherapie – Physiotherapie und Osteopathie.</p>
+        </div>
+        <div class="footer-spalte">
+          <h4>Navigation</h4>
+          <a href="index.html">Startseite</a>
+          <a href="ueber-mich.html">Über mich</a>
+          <a href="termin.html">Termin buchen</a>
+          <a href="kontakt.html">Kontakt</a>
+        </div>
+        <div class="footer-spalte">
+          <h4>Rechtliches</h4>
+          <a href="impressum.html">Impressum</a>
+          <a href="impressum.html#datenschutz">Datenschutzerklärung</a>
+        </div>
+        <div class="footer-spalte">
+          <h4>Kontakt</h4>
+          <p> [IHRE TELEFONNUMMER]</p>
+          <p> [IHRE E-MAIL]</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p> Chiropraktik ersetzt keine tierärztliche Behandlung. Bei Notfällen sofort zum Tierarzt.</p>
+        <p style="margin-top:10px">© 2026 Tierchiropraktik Dennis Meyer · <a href="impressum.html" style="color:var(--flieder)">Impressum</a> · <a href="impressum.html#datenschutz" style="color:var(--flieder)">Datenschutz</a></p>
+        <p style="margin-top:8px;font-size:0.72rem;opacity:0.35"><a href="admin.html" style="color:inherit">⚙</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
+
+
+
