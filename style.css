@@ -1186,3 +1186,17 @@ footer {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.behandlung-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: start;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .behandlung-grid {
+    grid-template-columns: 1fr; /* Wechselt auf smartphones automatisch zu einer Spalte *\
+  }
+}
